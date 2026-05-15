@@ -110,7 +110,7 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="mb-8">
           <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Account</p>
           <h1 className="text-3xl font-black text-gray-900 dark:text-white">Profile ⚙️</h1>

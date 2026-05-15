@@ -4,7 +4,6 @@ import Navbar from '../components/Navbar';
 import api from '../utils/api';
 import { Search, CheckCircle2, UtensilsCrossed, Plus, Minus, Utensils, Loader2 } from 'lucide-react';
 import { FOOD_DB } from '../data/foods';
-import toast from 'react-hot-toast';
 
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 const CATEGORIES = ['All', 'Protein', 'Carbs', 'Fruit', 'Dairy', 'Fats', 'Veggies', 'Custom', 'Recent'];
@@ -21,6 +20,7 @@ const LogFoodPage = () => {
   const [recentFoods, setRecentFoods] = useState([]);
   const [customFoods, setCustomFoods] = useState([]);
   
+  const [successMsg, setSuccessMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
   
   const [showCustomForm, setShowCustomForm] = useState(false);
@@ -85,11 +85,11 @@ const LogFoodPage = () => {
         setRecentFoods(prev => [{ ...res.data, category: 'Recent' }, ...prev]);
       }
 
-      toast.success(`${selected.name} added to ${mealType}!`);
+      setSuccessMsg(`${selected.name} added to ${mealType}!`);
       setSelected(null);
       setQty(1);
+      setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) {
-      toast.error('Failed to log food');
       console.error(err);
     } finally {
       setSubmitting(false);
@@ -102,11 +102,11 @@ const LogFoodPage = () => {
     try {
       const res = await api.post('/foods/custom', customForm);
       setCustomFoods(prev => [res.data, ...prev]);
-      toast.success('Custom food saved to your database!');
+      setSuccessMsg('Custom food saved to your database!');
       setShowCustomForm(false);
       setCustomForm({ name: '', calories: '', protein: '', carbs: '', fat: '' });
+      setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) { 
-      toast.error('Failed to save custom food');
       console.error(err); 
     } finally { 
       setSubmitting(false); 
@@ -118,8 +118,8 @@ const LogFoodPage = () => {
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 py-8 pb-24 md:pb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+      <div className="max-w-6xl mx-auto px-4 py-8 pb-24 md:pb-8">
+        <div className="flex items-start justify-between mb-8">
           <div>
             <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Nutrition Tracker</p>
             <h1 className="text-3xl font-black text-gray-900 dark:text-white">Log Food 🍽️</h1>
@@ -130,6 +130,12 @@ const LogFoodPage = () => {
             <p className="text-2xl font-black gradient-text">{totalToday} <span className="text-base text-gray-400">kcal</span></p>
           </div>
         </div>
+
+        {successMsg && (
+          <div className="mb-5 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 rounded-2xl font-semibold text-sm flex items-center gap-2">
+            <CheckCircle2 size={18} /> {successMsg}
+          </div>
+        )}
 
         <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6">
           {/* Food Search */}
@@ -222,7 +228,7 @@ const LogFoodPage = () => {
                     <input required type="text" value={customForm.name} onChange={e => setCustomForm({...customForm, name: e.target.value})}
                       className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 outline-none text-sm text-gray-800 dark:text-white" />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs font-bold text-gray-500 block mb-1.5">Calories (kcal)</label>
                       <input required type="number" step="0.1" value={customForm.calories} onChange={e => setCustomForm({...customForm, calories: e.target.value})}
@@ -256,7 +262,7 @@ const LogFoodPage = () => {
           {/* Right Panel */}
           <div className={`space-y-5 order-1 lg:order-2 ${!selected && !loggedToday.length ? 'hidden lg:block' : ''}`}>
             {/* Add Panel */}
-            <div className={`glass rounded-3xl p-6 ${!selected ? 'hidden lg:block' : ''}`}>
+            <div className="glass rounded-3xl p-6">
               <h2 className="font-bold text-gray-800 dark:text-white mb-5">Add to Log</h2>
               {selected ? (
                 <div className="space-y-5">
@@ -285,9 +291,9 @@ const LogFoodPage = () => {
                   <div>
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">Quantity</label>
                     <div className="flex items-center gap-3 bg-gray-50 dark:bg-white/5 rounded-2xl p-1">
-                      <button onClick={() => setQty(q => Math.max(0.5, +(q - 0.5).toFixed(2)))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Minus size={16} /></button>
+                      <button onClick={() => setQty(q => Math.max(0.25, +(q - 0.25).toFixed(2)))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Minus size={16} /></button>
                       <span className="flex-1 text-center font-black text-gray-800 dark:text-white text-lg">{qty}</span>
-                      <button onClick={() => setQty(q => +(q + 0.5).toFixed(2))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Plus size={16} /></button>
+                      <button onClick={() => setQty(q => +(q + 0.25).toFixed(2))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Plus size={16} /></button>
                     </div>
                   </div>
 
