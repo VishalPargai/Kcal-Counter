@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
   weight: { type: Number, default: null }, // kg
   height: { type: Number, default: null }, // cm
   dailyGoal: { type: Number, default: 2000 },
+  proteinGoal: { type: Number, default: 150 }, // g
+  carbsGoal: { type: Number, default: 250 }, // g
+  fatGoal: { type: Number, default: 70 }, // g
   activityLevel: {
     type: String,
     enum: ['sedentary', 'light', 'moderate', 'active', 'veryactive'],

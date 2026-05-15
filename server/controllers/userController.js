@@ -11,6 +11,9 @@ const safeUser = (user) => ({
   weight: user.weight,
   height: user.height,
   dailyGoal: user.dailyGoal,
+  proteinGoal: user.proteinGoal,
+  carbsGoal: user.carbsGoal,
+  fatGoal: user.fatGoal,
   activityLevel: user.activityLevel,
   createdAt: user.createdAt,
   role: user.role,
@@ -31,7 +34,7 @@ export const getProfile = async (req, res) => {
 // PUT /api/user/profile
 export const updateProfile = async (req, res) => {
   try {
-    const { fullName, phoneNumber, age, weight, height, dailyGoal, activityLevel } = req.body;
+    const { fullName, phoneNumber, age, weight, height, dailyGoal, proteinGoal, carbsGoal, fatGoal, activityLevel } = req.body;
     const updates = {};
     if (fullName !== undefined) updates.fullName = fullName;
     if (phoneNumber !== undefined) updates.phoneNumber = phoneNumber;
@@ -39,6 +42,9 @@ export const updateProfile = async (req, res) => {
     if (weight !== undefined) updates.weight = weight;
     if (height !== undefined) updates.height = height;
     if (dailyGoal !== undefined) updates.dailyGoal = dailyGoal;
+    if (proteinGoal !== undefined) updates.proteinGoal = proteinGoal;
+    if (carbsGoal !== undefined) updates.carbsGoal = carbsGoal;
+    if (fatGoal !== undefined) updates.fatGoal = fatGoal;
     if (activityLevel !== undefined) updates.activityLevel = activityLevel;
 
     const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true }).select('-password');

@@ -57,7 +57,12 @@ const LogFoodPage = () => {
   
   if (category === 'Recent') {
     displayFoods = recentFoods;
-  } else if (category !== 'All') {
+  } else if (category === 'All') {
+    const recentNames = new Set(recentFoods.map(f => f.name));
+    const otherFoods = combinedFoods.filter(f => !recentNames.has(f.name));
+    const markedRecents = recentFoods.map(f => ({ ...f, isRecentMarker: true }));
+    displayFoods = [...markedRecents, ...otherFoods];
+  } else {
     displayFoods = combinedFoods.filter(f => f.category === category);
   }
   
@@ -196,7 +201,9 @@ const LogFoodPage = () => {
                             {food.icon || <Utensils size={20} />}
                           </div>
                           <div>
-                            <p className="font-semibold text-sm text-gray-800 dark:text-white">{food.name}</p>
+                            <p className="font-semibold text-sm text-gray-800 dark:text-white">
+                              {food.name} {food.isRecentMarker && <span className="text-indigo-500 font-bold text-xs ml-1">(Recent)</span>}
+                            </p>
                             <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                               <span className="text-blue-500 font-medium">P:{food.protein}g</span> ·
                               <span className="text-amber-500 font-medium"> C:{food.carbs}g</span> ·

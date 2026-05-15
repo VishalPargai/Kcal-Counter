@@ -46,7 +46,20 @@ const Homepage = () => {
   const [user, setUser] = useState(null);
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dailyTip, setDailyTip] = useState('');
   const navigate = useNavigate();
+
+  const TIPS = [
+    "Drink a glass of water before each meal to naturally reduce your calorie intake by up to 13%.",
+    "Eating more protein can boost your metabolism by up to 80-100 calories per day.",
+    "Don't drink calories! Sugary sodas and fruit juices are the most fattening things you can put in your body.",
+    "Try eating slowly and chewing your food well to increase fullness hormones.",
+    "Lack of sleep is strongly linked to weight gain. Aim for 7-8 hours of quality sleep per night."
+  ];
+
+  useEffect(() => {
+    setDailyTip(TIPS[Math.floor(Math.random() * TIPS.length)]);
+  }, []);
 
   const fetchData = useCallback(async () => {
     try {
@@ -202,9 +215,9 @@ const Homepage = () => {
             <div className="glass rounded-3xl p-6">
               <h2 className="font-bold text-gray-800 dark:text-white mb-5">Macros</h2>
               {[
-                { label: 'Protein', val: totalProtein, max: (user?.weight || 70) * 1.6, color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-50 dark:bg-blue-900/10', icon: <Dumbbell size={16} /> },
-                { label: 'Carbs', val: totalCarbs, max: 250, color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50 dark:bg-amber-900/10', icon: <Wheat size={16} /> },
-                { label: 'Fat', val: totalFat, max: 70, color: 'from-pink-500 to-rose-500', bg: 'bg-pink-50 dark:bg-pink-900/10', icon: <Droplet size={16} /> },
+                { label: 'Protein', val: totalProtein, max: user?.proteinGoal || 150, color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-50 dark:bg-blue-900/10', icon: <Dumbbell size={16} /> },
+                { label: 'Carbs', val: totalCarbs, max: user?.carbsGoal || 250, color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50 dark:bg-amber-900/10', icon: <Wheat size={16} /> },
+                { label: 'Fat', val: totalFat, max: user?.fatGoal || 70, color: 'from-pink-500 to-rose-500', bg: 'bg-pink-50 dark:bg-pink-900/10', icon: <Droplet size={16} /> },
               ].map(m => {
                 const pct = Math.min((m.val / m.max) * 100, 100);
                 return (
@@ -226,7 +239,7 @@ const Homepage = () => {
               <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/10 -translate-y-10 translate-x-10" />
               <p className="flex items-center gap-1.5 text-xs font-bold text-white/60 uppercase tracking-widest mb-2 relative z-10"><Lightbulb size={14} /> Daily Tip</p>
               <p className="text-sm font-medium text-white/90 leading-relaxed relative z-10">
-                Drink a glass of water before each meal to naturally reduce your calorie intake by up to 13%.
+                {dailyTip}
               </p>
             </div>
 

@@ -9,7 +9,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const fileRef = useRef();
   const [user, setUser] = useState(null);
-  const [form, setForm] = useState({ fullName: '', phoneNumber: '', age: '', weight: '', height: '', dailyGoal: '2000', activityLevel: 'moderate' });
+  const [form, setForm] = useState({ fullName: '', phoneNumber: '', age: '', weight: '', height: '', dailyGoal: '2000', proteinGoal: '150', carbsGoal: '250', fatGoal: '70', activityLevel: 'moderate' });
   const [avatar, setAvatar] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -29,6 +29,9 @@ const ProfilePage = () => {
         weight: u.weight || '',
         height: u.height || '',
         dailyGoal: u.dailyGoal || 2000,
+        proteinGoal: u.proteinGoal || 150,
+        carbsGoal: u.carbsGoal || 250,
+        fatGoal: u.fatGoal || 70,
         activityLevel: u.activityLevel || 'moderate',
       });
     }).catch(() => navigate('/login'));
@@ -76,6 +79,9 @@ const ProfilePage = () => {
         weight: form.weight ? Number(form.weight) : undefined,
         height: form.height ? Number(form.height) : undefined,
         dailyGoal: Number(form.dailyGoal),
+        proteinGoal: Number(form.proteinGoal),
+        carbsGoal: Number(form.carbsGoal),
+        fatGoal: Number(form.fatGoal),
         activityLevel: form.activityLevel,
       });
       setUser(res.data);
@@ -113,7 +119,7 @@ const ProfilePage = () => {
       <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="mb-8">
           <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Account</p>
-          <h1 className="text-3xl font-black text-gray-900 dark:text-white">Profile ⚙️</h1>
+          <h1 className="text-3xl font-black text-gray-900 dark:text-white">Profile</h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">Manage your personal details and goals</p>
         </div>
 
@@ -205,8 +211,11 @@ const ProfilePage = () => {
                     { label: 'Weight (kg)', key: 'weight', type: 'number', placeholder: '70' },
                     { label: 'Height (cm)', key: 'height', type: 'number', placeholder: '175' },
                     { label: 'Daily Calorie Goal (kcal)', key: 'dailyGoal', type: 'number', placeholder: '2000' },
+                    { label: 'Protein Goal (g)', key: 'proteinGoal', type: 'number', placeholder: '150' },
+                    { label: 'Carbs Goal (g)', key: 'carbsGoal', type: 'number', placeholder: '250' },
+                    { label: 'Fat Goal (g)', key: 'fatGoal', type: 'number', placeholder: '70' },
                   ].map(field => (
-                    <div key={field.key} className={field.key === 'dailyGoal' ? 'sm:col-span-2' : ''}>
+                    <div key={field.key}>
                       <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-1.5">{field.label}</label>
                       <input type={field.type} value={form[field.key]} onChange={e => setForm({ ...form, [field.key]: e.target.value })}
                         placeholder={field.placeholder}

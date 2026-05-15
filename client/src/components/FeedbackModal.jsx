@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { MessageSquare, X, Send, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../utils/api';
@@ -7,6 +8,11 @@ const FeedbackModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', feedback: '' });
+  const location = useLocation();
+
+  if (location.pathname === '/login' || !localStorage.getItem('token')) {
+    return null;
+  }
 
   useEffect(() => {
     if (isOpen) {
