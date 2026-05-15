@@ -100,10 +100,30 @@ const Loginpage = () => {
       <div className="absolute top-[40%] left-[60%] w-[300px] h-[300px] rounded-full bg-pink-500/15 dark:bg-pink-600/10 blur-[100px] pointer-events-none" />
 
       {/* Theme toggle */}
-      <button onClick={toggleTheme}
-        className="absolute top-6 right-6 z-50 p-3 rounded-2xl glass glow-indigo hover:scale-110 transition-all duration-300 text-indigo-600 dark:text-yellow-400">
-        {isDark ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
+      <div className="absolute top-6 right-6 z-50">
+        <div className="toggleWrapper">
+          <input 
+            className="input" 
+            id="dn-login" 
+            type="checkbox" 
+            checked={isDark}
+            onChange={toggleTheme}
+          />
+          <label className="toggle" htmlFor="dn-login">
+            <span className="toggle__handler">
+              <span className="crater crater--1"></span>
+              <span className="crater crater--2"></span>
+              <span className="crater crater--3"></span>
+            </span>
+            <span className="star star--1"></span>
+            <span className="star star--2"></span>
+            <span className="star star--3"></span>
+            <span className="star star--4"></span>
+            <span className="star star--5"></span>
+            <span className="star star--6"></span>
+          </label>
+        </div>
+      </div>
 
       {/* Brand top-left */}
       <div className="absolute top-6 left-6 z-50 flex items-center gap-2">
@@ -115,9 +135,6 @@ const Loginpage = () => {
 
       {/* Card */}
       <div className="relative w-full max-w-md mx-4 glass rounded-3xl p-8 sm:p-10 glow-indigo z-10 transition-all duration-500">
-        {/* Top gradient bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 rounded-t-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
-
         {view.startsWith('forgot') && (
           <button onClick={() => setView('login')} className="absolute top-6 left-6 text-gray-400 hover:text-indigo-500 transition-colors">
             <ArrowLeft size={20} />

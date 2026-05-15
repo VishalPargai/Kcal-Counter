@@ -10,6 +10,7 @@ const AdminDashboard = () => {
   const [expandedUser, setExpandedUser] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -71,10 +72,10 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen mesh-bg text-gray-900 dark:text-white pb-20 lg:pb-10">
+    <div className="min-h-screen mesh-bg text-gray-900 dark:text-white pb-24 md:pb-8">
       <Navbar />
       
-      <div className="max-w-6xl mx-auto px-4 pt-24">
+      <div className="max-w-6xl mx-auto px-4 pt-24 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold uppercase tracking-widest mb-3">
@@ -101,7 +102,12 @@ const AdminDashboard = () => {
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                     {user.avatar ? (
-                      <img src={user.avatar} alt="avatar" className="w-full h-full rounded-full object-cover" />
+                      <img 
+                        src={user.avatar} 
+                        alt="avatar" 
+                        className="w-full h-full rounded-full object-cover cursor-pointer hover:opacity-80 transition-opacity" 
+                        onClick={(e) => { e.stopPropagation(); setSelectedImage(user.avatar); }}
+                      />
                     ) : (
                       user.fullName.charAt(0).toUpperCase()
                     )}
@@ -110,7 +116,9 @@ const AdminDashboard = () => {
                     <h3 className="font-bold text-lg flex items-center gap-2">
                       {user.fullName}
                     </h3>
-                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <p className="text-sm text-gray-500 truncate w-32 sm:w-auto">
+                      {user.email} {user.phoneNumber && <span className="ml-2 text-indigo-500 dark:text-indigo-400 font-semibold hidden md:inline-block">• 📞 {user.phoneNumber}</span>}
+                    </p>
                   </div>
                 </div>
                 
@@ -168,10 +176,10 @@ const AdminDashboard = () => {
                             userDetails.meals.slice(0, 10).map(meal => (
                               <div key={meal._id} className="flex items-center justify-between p-3 bg-white/50 dark:bg-black/20 rounded-xl">
                                 <div>
-                                  <p className="font-semibold text-sm">{meal.foodName} <span className="text-xs text-gray-500 font-normal">x{meal.quantity}</span></p>
-                                  <p className="text-xs text-gray-500">{new Date(meal.date).toLocaleDateString()} • {meal.mealType}</p>
+                                  <p className="font-semibold text-sm">{meal.name} <span className="text-xs text-gray-500 font-normal">x{meal.quantity}</span></p>
+                                  <p className="text-xs text-gray-500">{new Date(meal.loggedAt).toLocaleDateString()} • {meal.mealType}</p>
                                 </div>
-                                <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">{meal.totalCalories} kcal</p>
+                                <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">{meal.calories} kcal</p>
                               </div>
                             ))
                           )}
@@ -193,6 +201,21 @@ const AdminDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 cursor-zoom-out"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img 
+            src={selectedImage} 
+            alt="Expanded avatar" 
+            className="max-w-full max-h-full rounded-2xl shadow-2xl animate-in zoom-in duration-200"
+            onClick={(e) => e.stopPropagation()} 
+          />
+        </div>
+      )}
     </div>
   );
 };

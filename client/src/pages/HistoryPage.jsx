@@ -56,7 +56,7 @@ const HistoryPage = () => {
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8">
+      <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="mb-8">
           <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Analytics</p>
           <h1 className="text-3xl font-black text-gray-900 dark:text-white">History 📊</h1>
@@ -64,7 +64,7 @@ const HistoryPage = () => {
         </div>
 
         {/* Summary stats */}
-        <div className="grid grid-cols-3 gap-4 mb-7">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-7">
           {[
             { label: 'Avg Daily', value: `${avgCal.toFixed(0)}`, unit: 'kcal', color: 'from-indigo-600 to-purple-700' },
             { label: 'Days on Track', value: streak, unit: `/ 7`, color: streak >= 5 ? 'from-emerald-500 to-teal-600' : streak >= 3 ? 'from-amber-500 to-orange-600' : 'from-red-500 to-rose-600' },

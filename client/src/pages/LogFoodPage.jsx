@@ -118,8 +118,8 @@ const LogFoodPage = () => {
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 py-8 pb-24 md:pb-8">
-        <div className="flex items-start justify-between mb-8">
+      <div className="max-w-6xl mx-auto px-4 py-8 pb-24 md:pb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
           <div>
             <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Nutrition Tracker</p>
             <h1 className="text-3xl font-black text-gray-900 dark:text-white">Log Food 🍽️</h1>
@@ -131,9 +131,9 @@ const LogFoodPage = () => {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6">
           {/* Food Search */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-4 order-2 lg:order-1">
             {/* Search */}
             <div className="glass rounded-3xl p-5">
               <div className="relative mb-4">
@@ -176,7 +176,10 @@ const LogFoodPage = () => {
                       </button>
                     </div>
                     {filtered.map(food => (
-                      <button key={food._id || food.name} onClick={() => setSelected(food)}
+                      <button key={food._id || food.name} onClick={() => {
+                          setSelected(food);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                         className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all hover:cursor-pointer ${
                           selected?.name === food.name
                             ? 'bg-indigo-50 dark:bg-indigo-900/30 ring-2 ring-indigo-500 dark:ring-indigo-400'
@@ -219,7 +222,7 @@ const LogFoodPage = () => {
                     <input required type="text" value={customForm.name} onChange={e => setCustomForm({...customForm, name: e.target.value})}
                       className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 outline-none text-sm text-gray-800 dark:text-white" />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs font-bold text-gray-500 block mb-1.5">Calories (kcal)</label>
                       <input required type="number" step="0.1" value={customForm.calories} onChange={e => setCustomForm({...customForm, calories: e.target.value})}
@@ -251,9 +254,9 @@ const LogFoodPage = () => {
           </div>
 
           {/* Right Panel */}
-          <div className="space-y-5">
+          <div className={`space-y-5 order-1 lg:order-2 ${!selected && !loggedToday.length ? 'hidden lg:block' : ''}`}>
             {/* Add Panel */}
-            <div className="glass rounded-3xl p-6">
+            <div className={`glass rounded-3xl p-6 ${!selected ? 'hidden lg:block' : ''}`}>
               <h2 className="font-bold text-gray-800 dark:text-white mb-5">Add to Log</h2>
               {selected ? (
                 <div className="space-y-5">

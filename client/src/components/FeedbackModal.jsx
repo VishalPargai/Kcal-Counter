@@ -41,7 +41,7 @@ const FeedbackModal = () => {
       {/* Floating Button */}
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg shadow-indigo-500/30 transition-transform hover:scale-110 active:scale-95"
+        className="fixed bottom-20 md:bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg shadow-indigo-500/30 transition-transform hover:scale-110 active:scale-95"
         title="Send Feedback"
       >
         <MessageSquare size={24} />
