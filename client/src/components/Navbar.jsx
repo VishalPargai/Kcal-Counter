@@ -1,14 +1,7 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Plus, History, User, Sun, Moon, LogOut } from 'lucide-react';
-
-const navLinks = [
-  { label: 'Dashboard', path: '/', icon: <LayoutDashboard size={18} /> },
-  { label: 'Log Food', path: '/log', icon: <Plus size={18} /> },
-  { label: 'History', path: '/history', icon: <History size={18} /> },
-  { label: 'Profile', path: '/profile', icon: <User size={18} /> },
-];
+import { LayoutDashboard, Plus, History, User, Sun, Moon, LogOut, Shield } from 'lucide-react';
 
 const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -22,6 +15,16 @@ const Navbar = () => {
     localStorage.removeItem('user');
     navigate('/login');
   };
+
+  const navLinks = user.role === 'admin' ? [
+    { label: 'Admin Dashboard', path: '/admin', icon: <Shield size={18} /> },
+    { label: 'Profile', path: '/profile', icon: <User size={18} /> },
+  ] : [
+    { label: 'Dashboard', path: '/', icon: <LayoutDashboard size={18} /> },
+    { label: 'Log Food', path: '/log', icon: <Plus size={18} /> },
+    { label: 'History', path: '/history', icon: <History size={18} /> },
+    { label: 'Profile', path: '/profile', icon: <User size={18} /> },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-gray-200/40 dark:border-white/5 bg-white/60 dark:bg-black/40 backdrop-blur-2xl">

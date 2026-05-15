@@ -50,10 +50,17 @@ const Homepage = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const [profileRes, mealsRes] = await Promise.all([
-        api.get('/user/profile'),
-        api.get('/meals')
-      ]);
+      const profileRes = await api.get('/user/profile');
+      
+      setUser(profileRes.data);
+      localStorage.setItem('user', JSON.stringify(profileRes.data));
+      
+      if (profileRes.data.role === 'admin') {
+        navigate('/admin');
+        return;
+      }
+      
+      const mealsRes = await api.get('/meals');
       setUser(profileRes.data);
       localStorage.setItem('user', JSON.stringify(profileRes.data));
       setMeals(mealsRes.data);

@@ -7,6 +7,8 @@ import Homepage from './pages/Homepage';
 import LogFoodPage from './pages/LogFoodPage';
 import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
+import AdminDashboard from './pages/AdminDashboard';
+import FeedbackModal from './components/FeedbackModal';
 
 const App = () => {
   return (
@@ -24,14 +26,18 @@ const App = () => {
         }} 
       />
       <Router>
-        <Routes>
-          <Route path="/login" element={<Loginpage />} />
-          <Route path="/" element={<Homepage />} />
-          <Route path="/log" element={<LogFoodPage />} />
-          <Route path="/history" element={<HistoryPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <div className="min-h-screen">
+          <Routes>
+            <Route path="/login" element={<Loginpage />} />
+            <Route path="/" element={<Homepage />} />
+            <Route path="/log" element={<LogFoodPage />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+        <FeedbackModal />
       </Router>
     </ThemeProvider>
   );

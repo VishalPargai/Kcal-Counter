@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import authMiddleware from '../middleware/authMiddleware.js';
-import { getProfile, updateProfile, uploadAvatar } from '../controllers/userController.js';
+import { getProfile, updateProfile, uploadAvatar, submitFeedback } from '../controllers/userController.js';
 
 const router = express.Router();
 const upload = multer({
@@ -16,5 +16,6 @@ const upload = multer({
 router.get('/profile', authMiddleware, getProfile);
 router.put('/profile', authMiddleware, updateProfile);
 router.post('/avatar', authMiddleware, upload.single('avatar'), uploadAvatar);
+router.post('/feedback', authMiddleware, submitFeedback);
 
 export default router;

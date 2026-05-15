@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema({
     enum: ['sedentary', 'light', 'moderate', 'active', 'veryactive'],
     default: 'moderate'
   },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  resetOtp: { type: String, default: null },
+  resetOtpExpire: { type: Date, default: null },
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

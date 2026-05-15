@@ -282,9 +282,9 @@ const LogFoodPage = () => {
                   <div>
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">Quantity</label>
                     <div className="flex items-center gap-3 bg-gray-50 dark:bg-white/5 rounded-2xl p-1">
-                      <button onClick={() => setQty(q => Math.max(0.25, +(q - 0.25).toFixed(2)))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Minus size={16} /></button>
+                      <button onClick={() => setQty(q => Math.max(0.5, +(q - 0.5).toFixed(2)))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Minus size={16} /></button>
                       <span className="flex-1 text-center font-black text-gray-800 dark:text-white text-lg">{qty}</span>
-                      <button onClick={() => setQty(q => +(q + 0.25).toFixed(2))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Plus size={16} /></button>
+                      <button onClick={() => setQty(q => +(q + 0.5).toFixed(2))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Plus size={16} /></button>
                     </div>
                   </div>
 

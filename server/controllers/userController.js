@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import sendEmail from '../utils/sendEmail.js';
 
 const safeUser = (user) => ({
   id: user._id,
@@ -12,6 +13,7 @@ const safeUser = (user) => ({
   dailyGoal: user.dailyGoal,
   activityLevel: user.activityLevel,
   createdAt: user.createdAt,
+  role: user.role,
 });
 
 // GET /api/user/profile
@@ -63,3 +65,36 @@ export const uploadAvatar = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// POST /api/user/feedback
+export const submitFeedback = async (req, res) => {
+  try {
+    const { name, email, feedback } = req.body;
+    
+    if (!name || !email || !feedback) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const html = `
+      <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+        <h2 style="color: #4f46e5;">New Feedback Received</h2>
+        <p><strong>From:</strong> ${name} (${email})</p>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+        <p><strong>Feedback:</strong></p>
+        <p style="white-space: pre-wrap; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #f3f4f6;">${feedback}</p>
+      </div>
+    `;
+
+    await sendEmail({
+      email: 'vishal.pargai2017@gmail.com',
+      subject: `🚀 KcalCounter Feedback from ${name}`,
+      html
+    });
+
+    res.status(200).json({ message: 'Feedback sent successfully' });
+  } catch (err) {
+    console.error('Feedback error:', err.message);
+    res.status(500).json({ message: 'Failed to send feedback' });
+  }
+};
+

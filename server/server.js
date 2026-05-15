@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,8 +9,8 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import mealRoutes from './routes/mealRoutes.js';
 import customFoodRoutes from './routes/customFoodRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
-dotenv.config();
 await connectDB();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,6 +28,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/foods/custom', customFoodRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Serve Static Assets in production
 if (process.env.NODE_ENV === 'production') {
