@@ -11,11 +11,6 @@ const sendEmail = async (options) => {
     throw new Error('Email service not configured. Contact support.');
   }
 
-  // Custom DNS lookup override guaranteeing IPv4 A-record resolution
-  const customLookup = (hostname, opts, callback) => {
-    dns.lookup(hostname, { family: 4 }, callback);
-  };
-
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: Number(process.env.SMTP_PORT) || 587,
@@ -27,8 +22,6 @@ const sendEmail = async (options) => {
     tls: {
       rejectUnauthorized: false,
     },
-    family: 4,
-    lookup: customLookup,
   });
 
   // Verify connection before sending
