@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import dns from 'dns';
 
 const sendEmail = async (options) => {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
@@ -6,7 +7,13 @@ const sendEmail = async (options) => {
     throw new Error('Email service not configured. Contact support.');
   }
 
+  // Custom DNS lookup to guarantee IPv4 (bypasses Render IPv6 bug completely)
+  const customLookup = (hostname, opts, callback) => {
+    dns.lookup(hostname, { family: 4 }, callback);
+  };
+
   const transporter = nodemailer.createTransport({
+    service: 'gmail',
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: Number(process.env.SMTP_PORT) || 587,
     secure: Number(process.env.SMTP_PORT) === 465, // true for 465 (SSL), false for 587 (STARTTLS)
@@ -17,7 +24,7 @@ const sendEmail = async (options) => {
     tls: {
       rejectUnauthorized: false,
     },
-    family: 4, // Force IPv4 (fixes Render ENETUNREACH IPv6 bug)
+    lookup: customLookup,
   });
 
   // Verify connection before sending
