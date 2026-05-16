@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import dns from 'dns';
+import dns from 'dns/promises';
 
 const sendEmail = async (options) => {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
@@ -7,13 +7,19 @@ const sendEmail = async (options) => {
     throw new Error('Email service not configured. Contact support.');
   }
 
-  // Custom DNS lookup to guarantee IPv4 (bypasses Render IPv6 bug completely)
-  const customLookup = (hostname, opts, callback) => {
-    dns.lookup(hostname, { family: 4 }, callback);
-  };
+  const originalHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  let resolvedIpv4 = originalHost;
+  
+  // Explicitly resolve the IPv4 address to bypass all Node/Nodemailer IPv6 bugs
+  try {
+    const { address } = await dns.lookup(originalHost, { family: 4 });
+    resolvedIpv4 = address;
+  } catch (err) {
+    console.error('DNS IPv4 lookup failed, falling back to hostname:', err.message);
+  }
 
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    host: resolvedIpv4,
     port: Number(process.env.SMTP_PORT) || 587,
     secure: Number(process.env.SMTP_PORT) === 465, // true for 465 (SSL), false for 587 (STARTTLS)
     auth: {
@@ -21,9 +27,9 @@ const sendEmail = async (options) => {
       pass: process.env.SMTP_PASS,
     },
     tls: {
+      servername: originalHost, // Required so Gmail's SSL cert matches
       rejectUnauthorized: false,
     },
-    lookup: customLookup,
   });
 
   // Verify connection before sending
