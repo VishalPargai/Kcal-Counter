@@ -7,7 +7,15 @@ const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const safeParseUser = () => {
+    try {
+      const parsed = JSON.parse(localStorage.getItem('user'));
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch {
+      return {};
+    }
+  };
+  const user = safeParseUser();
   const initial = user?.fullName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U';
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);

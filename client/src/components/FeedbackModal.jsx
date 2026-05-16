@@ -10,14 +10,15 @@ const FeedbackModal = () => {
   const [formData, setFormData] = useState({ name: '', email: '', feedback: '' });
   const location = useLocation();
 
-  if (location.pathname === '/login' || !localStorage.getItem('token')) {
-    return null;
-  }
-
   useEffect(() => {
     if (isOpen) {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user) {
+      let user = null;
+      try {
+        user = JSON.parse(localStorage.getItem('user'));
+      } catch (e) {
+        user = null;
+      }
+      if (user && typeof user === 'object') {
         setFormData(prev => ({
           ...prev,
           name: user.fullName || '',
@@ -41,6 +42,10 @@ const FeedbackModal = () => {
       setLoading(false);
     }
   };
+
+  if (location.pathname === '/login' || !localStorage.getItem('token')) {
+    return null;
+  }
 
   return (
     <>

@@ -221,6 +221,11 @@ const Loginpage = () => {
               className="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 text-white font-bold rounded-2xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-60 flex items-center justify-center">
               {loading ? <Loader2 size={18} className="animate-spin" /> : 'Verify Code'}
             </button>
+            <div className="text-center mt-2">
+              <button type="button" onClick={handleForgotPassword} disabled={loading} className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+                Resend OTP
+              </button>
+            </div>
           </form>
         )}
 

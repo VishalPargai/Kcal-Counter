@@ -58,7 +58,10 @@ const ProfilePage = () => {
       setAvatar(res.data.avatar);
       setAvatarPreview(res.data.avatar);
       // Update localStorage user
-      const stored = JSON.parse(localStorage.getItem('user') || '{}');
+      let stored = {};
+      try {
+        stored = JSON.parse(localStorage.getItem('user')) || {};
+      } catch (e) {}
       localStorage.setItem('user', JSON.stringify({ ...stored, avatar: res.data.avatar }));
       toast.success('Profile photo updated!');
     } catch (err) { 

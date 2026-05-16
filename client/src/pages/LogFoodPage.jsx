@@ -31,14 +31,14 @@ const LogFoodPage = () => {
     
     // Fetch meals
     api.get('/meals').then(r => {
-      // Assuming r.data returns meals. We filter for today.
-      const todayMeals = r.data.filter(m => new Date(m.createdAt || m.loggedAt || new Date()).toDateString() === new Date().toDateString());
+      const data = Array.isArray(r.data) ? r.data : [];
+      const todayMeals = data.filter(m => new Date(m.createdAt || m.loggedAt || new Date()).toDateString() === new Date().toDateString());
       setLoggedToday(todayMeals);
 
       const unique = [];
       const map = new Set();
       // Most recent first
-      const sortedMeals = [...r.data].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      const sortedMeals = [...data].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       for(let m of sortedMeals) {
         if(!map.has(m.name)) {
           map.add(m.name);
@@ -49,7 +49,7 @@ const LogFoodPage = () => {
     }).catch(() => {});
 
     // Fetch custom foods
-    api.get('/foods/custom').then(r => setCustomFoods(r.data)).catch(() => {});
+    api.get('/foods/custom').then(r => setCustomFoods(Array.isArray(r.data) ? r.data : [])).catch(() => {});
   }, [navigate]);
 
   const combinedFoods = [...FOOD_DB, ...customFoods];

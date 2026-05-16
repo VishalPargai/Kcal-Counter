@@ -76,7 +76,7 @@ const Homepage = () => {
       const mealsRes = await api.get('/meals');
       setUser(profileRes.data);
       localStorage.setItem('user', JSON.stringify(profileRes.data));
-      setMeals(mealsRes.data);
+      setMeals(Array.isArray(mealsRes.data) ? mealsRes.data : []);
     } catch (err) {
       console.error(err);
     } finally {
