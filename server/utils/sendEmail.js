@@ -1,4 +1,4 @@
-import sgMail from '@sendgrid/mail.js';
+import sgMail from '@sendgrid/mail';
 
 // Initialize SendGrid with API key
 if (!process.env.SENDGRID_API_KEY) {
