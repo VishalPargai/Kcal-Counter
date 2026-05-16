@@ -14,6 +14,10 @@ const sendEmail = async (options) => {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    family: 4, // Force IPv4 (fixes Render ENETUNREACH IPv6 bug)
   });
 
   // Verify connection before sending
