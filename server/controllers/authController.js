@@ -62,7 +62,7 @@ export const register = async (req, res) => {
       email: user.email,
       subject: '🎉 Welcome to KcalCounter!',
       html: welcomeHtml
-    }).catch(err => console.error('Welcome email failed to send:', err.message));
+    }).catch(err => console.error('❌ Welcome email failed to send:', err.message));
 
     res.status(201).json({ token, user: safeUser(user) });
   } catch (err) {
@@ -125,18 +125,27 @@ export const forgotPassword = async (req, res) => {
     `;
 
     try {
+      console.log(`📧 Attempting to send OTP email to ${user.email}`);
       await sendEmail({
         email: user.email,
         subject: '🔒 Your Password Reset Code - KcalCounter',
         html
       });
+      console.log(`✅ OTP email sent successfully to ${user.email}`);
       res.status(200).json({ message: 'OTP sent to email' });
-    } catch (err) {
+    } catch (emailErr) {
+      console.error('❌ Failed to send OTP email:', emailErr.message);
+      console.error('Full error:', emailErr);
+      
+      // Clear OTP data since we couldn't send email
       user.resetOtp = null;
       user.resetOtpExpire = null;
       await user.save();
-      console.error('Email error:', err);
-      return res.status(500).json({ message: 'Email could not be sent' });
+      
+      // Return helpful error message
+      return res.status(500).json({ 
+        message: 'Could not send reset code. Please try again later or contact support.' 
+      });
     }
   } catch (err) {
     console.error('Forgot password error:', err.message);
@@ -203,7 +212,7 @@ export const resetPassword = async (req, res) => {
       email: user.email,
       subject: '✅ Password Reset Successful',
       html: resetHtml
-    }).catch(err => console.error('Reset success email failed to send:', err.message));
+    }).catch(err => console.error('❌ Reset success email failed to send:', err.message));
 
     res.status(200).json({ message: 'Password has been reset successfully' });
   } catch (err) {
