@@ -35,8 +35,8 @@ const sendEmail = async (options) => {
       minVersion: 'TLSv1.2',
     },
     // ✅ Add connection timeout
-    connectionTimeout: 5000,
-    socketTimeout: 5000,
+    connectionTimeout: 20000,
+    socketTimeout: 20000,
     // ✅ Retry logic
     maxConnections: 5,
     maxMessages: 100,
