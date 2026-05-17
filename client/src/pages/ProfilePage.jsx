@@ -5,7 +5,7 @@ import api from '../utils/api';
 import { Camera, Scale, Ruler, Cake, Target, Sofa, PersonStanding, Activity, Dumbbell, Zap, Save, Upload, Loader2, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const ProfilePage = () => {
+const ProfilePage = ({ onFoodMedia }) => {
   const navigate = useNavigate();
   const fileRef = useRef();
   const [user, setUser] = useState(null);
@@ -118,7 +118,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
-      <Navbar />
+      <Navbar onFoodMedia={onFoodMedia} />
       <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="mb-8">
           <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Account</p>

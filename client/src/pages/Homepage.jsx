@@ -42,7 +42,7 @@ const MealRow = ({ meal, onDelete }) => (
   </div>
 );
 
-const Homepage = () => {
+const Homepage = ({ onFoodMedia }) => {
   const [user, setUser] = useState(null);
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -117,7 +117,7 @@ const Homepage = () => {
 
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
-      <Navbar />
+      <Navbar onFoodMedia={onFoodMedia} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
 
         {/* Header */}

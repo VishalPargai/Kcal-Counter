@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Plus, History, User, LogOut, Shield } from 'lucide-react';
+import { LayoutDashboard, Plus, History, User, LogOut, Shield, Users } from 'lucide-react';
 
-const Navbar = () => {
+const Navbar = ({ onFoodMedia }) => {
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -77,8 +77,8 @@ const Navbar = () => {
             })}
           </div>
 
-          {/* Right: toggle + Logout Button */}
-          <div className="flex items-center gap-4">
+          {/* Right: toggle + FoodMedia + Logout */}
+          <div className="flex items-center gap-3">
             <div className="toggleWrapper">
               <input className="input" id="dn" type="checkbox" checked={isDark} onChange={toggleTheme} />
               <label className="toggle" htmlFor="dn">
@@ -96,6 +96,14 @@ const Navbar = () => {
               </label>
             </div>
             
+            {/* FoodMedia Button */}
+            <button
+              onClick={onFoodMedia}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white text-sm font-bold transition-all shadow-md hover:shadow-purple-500/30"
+            >
+              <Users size={16} /> FoodMedia
+            </button>
+
             <button onClick={handleLogout}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 text-sm font-bold transition-all">
               <LogOut size={16} /> Logout
@@ -104,27 +112,35 @@ const Navbar = () => {
         </div>
 
         {/* ── MOBILE VIEW ── */}
-        <div className="md:hidden flex items-center justify-between h-14 w-full px-1">
+        <div className="md:hidden flex items-center justify-around h-16 w-full px-2">
           {navLinks.map(link => {
+            const isActive = location.pathname === link.path;
+            
+            // Shorten labels for clean mobile display
+            let displayLabel = link.label;
+            if (link.label === 'Dashboard') displayLabel = 'Home';
+            if (link.label === 'Log Food') displayLabel = 'Log';
+            if (link.label === 'History') displayLabel = 'History';
+
             if (link.label === 'Profile') {
               return (
                 <div key="mobile-profile" className="flex-shrink-0 relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(prev => !prev)}
-                    className="flex items-center gap-1 px-2 py-1.5 rounded-lg focus:outline-none"
+                    className="flex flex-col items-center justify-center gap-1 p-1 focus:outline-none group"
                   >
                     {user.avatar ? (
                       <img
                         src={user.avatar}
                         alt="avatar"
-                        className="w-7 h-7 rounded-full object-cover ring-2 ring-indigo-500/40"
+                        className={`w-6 h-6 rounded-full object-cover ring-2 transition-all ${dropdownOpen || location.pathname === '/profile' ? 'ring-indigo-600 dark:ring-indigo-400 scale-110 shadow-md' : 'ring-gray-300 dark:ring-gray-600'}`}
                       />
                     ) : (
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white font-bold text-[10px]">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px] transition-all ${dropdownOpen || location.pathname === '/profile' ? 'bg-gradient-to-br from-violet-600 to-indigo-600 ring-2 ring-indigo-400 scale-110 shadow-md' : 'bg-gradient-to-br from-gray-400 to-gray-600'}`}>
                         {initial}
                       </div>
                     )}
-                    <span className={`text-[10px] font-bold ${dropdownOpen || location.pathname === '/profile' ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'}`}>Profile</span>
+                    <span className={`text-[10px] font-bold tracking-tight transition-all ${dropdownOpen || location.pathname === '/profile' ? 'text-indigo-600 dark:text-indigo-400 font-extrabold' : 'text-gray-500 dark:text-gray-400'}`}>Profile</span>
                   </button>
                   
                   {/* Mobile Profile Dropdown Menu */}
@@ -152,20 +168,31 @@ const Navbar = () => {
               );
             }
 
-            const isActive = location.pathname === link.path;
-            const displayLabel = link.label === 'Log Food' ? 'Food Log' : link.label;
             return (
               <button key={link.path} onClick={() => navigate(link.path)}
-                className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-all ${
+                className={`flex flex-col items-center justify-center gap-1 p-1 transition-all ${
                   isActive
-                    ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                    : 'text-gray-500 dark:text-gray-400'
+                    ? 'text-indigo-600 dark:text-indigo-400 scale-105'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}>
-                <span className="scale-75">{link.icon}</span>
-                <span>{displayLabel}</span>
+                <div className={`flex items-center justify-center transition-all ${isActive ? 'bg-indigo-50 dark:bg-indigo-900/30 p-1.5 rounded-xl shadow-inner' : ''}`}>
+                  <span className="scale-110">{link.icon}</span>
+                </div>
+                <span className={`text-[10px] font-bold tracking-tight ${isActive ? 'font-extrabold' : ''}`}>{displayLabel}</span>
               </button>
             );
           })}
+
+          {/* Mobile FoodMedia button */}
+          <button
+            onClick={onFoodMedia}
+            className="flex flex-col items-center justify-center gap-1 p-1 transition-all group active:scale-95"
+          >
+            <div className="bg-gradient-to-br from-pink-500 to-purple-600 p-1.5 rounded-xl shadow-md shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all flex items-center justify-center">
+              <Users size={16} className="text-white" />
+            </div>
+            <span className="text-[10px] font-extrabold tracking-tight" style={{ background: 'linear-gradient(135deg,#ec4899,#8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Media</span>
+          </button>
         </div>
       </div>
     </nav>

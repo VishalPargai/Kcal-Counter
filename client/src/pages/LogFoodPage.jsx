@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
-import { Search, CheckCircle2, UtensilsCrossed, Plus, Minus, Utensils, Loader2 } from 'lucide-react';
+import { Search, CheckCircle2, UtensilsCrossed, Plus, Minus, Utensils, Loader2, Camera, Users, X } from 'lucide-react';
 import { FOOD_DB } from '../data/foods';
 
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 const CATEGORIES = ['All', 'Protein', 'Carbs', 'Fruit', 'Dairy', 'Fats', 'Veggies', 'Custom', 'Recent'];
 
-const LogFoodPage = () => {
+const LogFoodPage = ({ onFoodMedia }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
@@ -25,6 +25,12 @@ const LogFoodPage = () => {
   
   const [showCustomForm, setShowCustomForm] = useState(false);
   const [customForm, setCustomForm] = useState({ name: '', calories: '', protein: '', carbs: '', fat: '' });
+
+  // FoodMedia post state
+  const [postToMedia, setPostToMedia] = useState(false);
+  const [foodPhoto, setFoodPhoto] = useState(null); // base64
+  const [caption, setCaption] = useState('');
+  const photoInputRef = useRef(null);
 
   useEffect(() => {
     if (!localStorage.getItem('token')) { navigate('/login'); return; }
@@ -68,8 +74,20 @@ const LogFoodPage = () => {
   
   const filtered = displayFoods.filter(f => f.name.toLowerCase().includes(search.toLowerCase()));
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setFoodPhoto(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
   const handleLog = async () => {
     if (!selected || submitting) return;
+    if (postToMedia && !foodPhoto) {
+      alert('Please take or upload a photo to post to FoodMedia!');
+      return;
+    }
     setSubmitting(true);
     try {
       const payload = {
@@ -85,14 +103,32 @@ const LogFoodPage = () => {
       const res = await api.post('/meals', payload);
       setLoggedToday(prev => [res.data, ...prev]);
       
+      // Post to FoodMedia if opted in
+      if (postToMedia && foodPhoto) {
+        await api.post('/posts', {
+          image: foodPhoto,
+          caption,
+          foodName: selected.name,
+          foodIcon: selected.icon || '🍽️',
+          calories: Math.round(selected.calories * qty),
+          protein: +(selected.protein * qty).toFixed(1),
+          carbs: +(selected.carbs * qty).toFixed(1),
+          fat: +(selected.fat * qty).toFixed(1),
+          mealType,
+        });
+      }
+
       // Add to recents if not present
       if (!recentFoods.some(f => f.name === res.data.name)) {
         setRecentFoods(prev => [{ ...res.data, category: 'Recent' }, ...prev]);
       }
 
-      setSuccessMsg(`${selected.name} added to ${mealType}!`);
+      setSuccessMsg(`${selected.name} added to ${mealType}!${postToMedia ? ' 📸 Posted to FoodMedia!' : ''}`);
       setSelected(null);
       setQty(1);
+      setFoodPhoto(null);
+      setCaption('');
+      setPostToMedia(false);
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) {
       console.error(err);
@@ -122,7 +158,7 @@ const LogFoodPage = () => {
 
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
-      <Navbar />
+      <Navbar onFoodMedia={onFoodMedia} />
       <div className="max-w-6xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="flex items-start justify-between mb-8">
           <div>
@@ -304,9 +340,71 @@ const LogFoodPage = () => {
                     </div>
                   </div>
 
+                  {/* FoodMedia Post Toggle */}
+                  <div className="rounded-2xl border-2 transition-all duration-200"
+                    style={{ borderColor: postToMedia ? '#8b5cf6' : 'transparent', background: postToMedia ? 'rgba(139,92,246,0.08)' : 'rgba(0,0,0,0.02)' }}>
+                    <button
+                      type="button"
+                      onClick={() => setPostToMedia(p => !p)}
+                      className="w-full flex items-center gap-3 p-3 rounded-2xl transition-all"
+                    >
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${ postToMedia ? 'bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg shadow-purple-500/30' : 'bg-gray-100 dark:bg-white/10'}`}>
+                        <Users size={18} className={postToMedia ? 'text-white' : 'text-gray-400'} />
+                      </div>
+                      <div className="text-left flex-1">
+                        <p className={`text-sm font-bold ${postToMedia ? 'text-purple-600 dark:text-purple-400' : 'text-gray-700 dark:text-gray-300'}`}>Post to FoodMedia</p>
+                        <p className="text-xs text-gray-400">Share with your community</p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${ postToMedia ? 'bg-purple-600 border-purple-600' : 'border-gray-300 dark:border-gray-600'}`}>
+                        {postToMedia && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                      </div>
+                    </button>
+
+                    {postToMedia && (
+                      <div className="px-3 pb-3 space-y-3">
+                        {/* Photo capture */}
+                        <div>
+                          <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">Food Photo <span className="text-red-400">*</span></label>
+                          <input ref={photoInputRef} type="file" accept="image/*" capture="environment" onChange={handlePhotoChange} className="hidden" />
+                          {foodPhoto ? (
+                            <div className="relative rounded-2xl overflow-hidden">
+                              <img src={foodPhoto} alt="Food" className="w-full h-40 object-cover rounded-2xl" />
+                              <button
+                                type="button"
+                                onClick={() => setFoodPhoto(null)}
+                                className="absolute top-2 right-2 w-7 h-7 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-all"
+                              ><X size={13} /></button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => photoInputRef.current?.click()}
+                              className="w-full h-32 border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-2xl flex flex-col items-center justify-center gap-2 text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all"
+                            >
+                              <Camera size={24} />
+                              <span className="text-xs font-bold">Take Photo or Upload</span>
+                            </button>
+                          )}
+                        </div>
+                        {/* Caption */}
+                        <div>
+                          <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">Caption (optional)</label>
+                          <textarea
+                            value={caption}
+                            onChange={e => setCaption(e.target.value)}
+                            placeholder="What's delicious about this meal? 😋"
+                            rows={2}
+                            maxLength={300}
+                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 outline-none text-sm text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 resize-none"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <button onClick={handleLog} disabled={submitting}
                     className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2">
-                    {submitting ? <Loader2 size={18} className="animate-spin" /> : <><Plus size={18} /> Add to Log</>}
+                    {submitting ? <Loader2 size={18} className="animate-spin" /> : <><Plus size={18} /> {postToMedia ? 'Log Food + Post' : 'Add to Log'}</>}
                   </button>
                 </div>
               ) : (

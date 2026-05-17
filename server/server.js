@@ -10,6 +10,7 @@ import userRoutes from './routes/userRoutes.js';
 import mealRoutes from './routes/mealRoutes.js';
 import customFoodRoutes from './routes/customFoodRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import postRoutes from './routes/postRoutes.js';
 
 await connectDB();
 const __filename = fileURLToPath(import.meta.url);
@@ -18,9 +19,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(cors());
-// Increase limit for base64 avatar images
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Increase limit for base64 avatar images + food photos
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // Routes
 app.get('/', (req, res) => res.json({ message: 'KcalCounter API is running ✅' }));
@@ -29,6 +30,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/foods/custom', customFoodRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/posts', postRoutes);
 
 // Serve Static Assets in production
 if (process.env.NODE_ENV === 'production') {

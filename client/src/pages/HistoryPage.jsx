@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import api from '../utils/api';
 import { Loader2, ChevronUp, ChevronDown, Utensils } from 'lucide-react';
 
-const HistoryPage = () => {
+const HistoryPage = ({ onFoodMedia }) => {
   const navigate = useNavigate();
   const [history, setHistory] = useState({});
   const [loading, setLoading] = useState(true);
@@ -55,7 +55,7 @@ const HistoryPage = () => {
 
   return (
     <div className="min-h-screen mesh-bg transition-colors duration-300">
-      <Navbar />
+      <Navbar onFoodMedia={onFoodMedia} />
       <div className="max-w-5xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="mb-8">
           <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Analytics</p>
