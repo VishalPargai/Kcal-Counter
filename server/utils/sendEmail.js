@@ -5,7 +5,7 @@ import dns from 'dns';
 dns.setDefaultResultOrder('ipv4first');
 
 const sendEmail = async (options) => {
-  console.log('📧 Email function called via Nodemailer (Gmail)');
+  console.log('📧 Email function called via Nodemailer');
   console.log('To:', options.email);
   console.log('Subject:', options.subject);
 
@@ -15,9 +15,9 @@ const sendEmail = async (options) => {
   }
 
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: Number(process.env.SMTP_PORT) === 465, // true for 465 (SSL), false for 587 (STARTTLS)
+    host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+    port: Number(process.env.SMTP_PORT) || 2525,
+    secure: Number(process.env.SMTP_PORT) === 465, // true for 465 (SSL), false for 587/2525 (STARTTLS)
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -29,13 +29,13 @@ const sendEmail = async (options) => {
     socketTimeout: 15000,
   });
 
-  console.log('🔍 Verifying SMTP connection to Gmail...');
+  console.log(`🔍 Verifying SMTP connection to ${process.env.SMTP_HOST}...`);
   try {
     await transporter.verify();
     console.log('✅ SMTP connection verified successfully!');
   } catch (verifyErr) {
     console.error('❌ SMTP connection failed:', verifyErr.message);
-    throw new Error('Could not connect to Gmail SMTP. Check App Password.');
+    throw new Error('Could not connect to SMTP server. Check credentials.');
   }
 
   try {
