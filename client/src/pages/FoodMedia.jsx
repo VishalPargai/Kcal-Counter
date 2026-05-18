@@ -79,6 +79,7 @@ const FoodMedia = ({ onClose }) => {
   };
 
   const handleDelete = async (postId) => {
+    if (!window.confirm('Are you sure you want to delete this post?')) return;
     try {
       await api.delete(`/posts/${postId}`);
       setPosts(prev => prev.filter(p => p._id !== postId));
@@ -166,7 +167,7 @@ const FoodMedia = ({ onClose }) => {
           <div className="max-w-lg mx-auto px-4 py-5 space-y-6">
             {posts.map(post => {
               const isLiked = post.likes?.includes(me.id);
-              const isOwner = post.user?._id === me.id || post.user?.email === me.email;
+              const isOwner = post.user?._id === me.id || post.user?.email === me.email || me.role === 'admin';
               const showComments = expandedComments[post._id];
 
               return (

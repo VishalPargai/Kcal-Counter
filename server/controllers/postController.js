@@ -1,4 +1,5 @@
 import Post from '../models/Post.js';
+import User from '../models/User.js';
 
 // Get all posts (feed) - newest first
 export const getPosts = async (req, res) => {
@@ -90,12 +91,15 @@ export const addComment = async (req, res) => {
   }
 };
 
-// Delete a post (only owner)
+// Delete a post (owner or admin)
 export const deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: 'Post not found' });
-    if (post.user.toString() !== req.user.id) {
+
+    const currentUser = await User.findById(req.user.id);
+
+    if (post.user.toString() !== req.user.id && (!currentUser || currentUser.role !== 'admin')) {
       return res.status(403).json({ message: 'Not authorized to delete this post' });
     }
     await post.deleteOne();
