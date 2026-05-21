@@ -125,7 +125,7 @@ const HistoryPage = ({ onFoodMedia }) => {
             const isOpen = expanded === date;
             return (
               <div key={date} className="glass rounded-3xl overflow-hidden">
-                <button className="w-full p-5 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 transition-all" onClick={() => setExpanded(isOpen ? null : date)}>
+                <button className="w-full p-5 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 transition-all cursor-pointer active:scale-[0.99]" onClick={() => setExpanded(isOpen ? null : date)}>
                   <div className="flex items-center gap-3">
                     <div className={`w-2 h-8 rounded-full ${calories > goal ? 'bg-red-500' : calories > 0 ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'}`} />
                     <div className="text-left">
@@ -149,7 +149,7 @@ const HistoryPage = ({ onFoodMedia }) => {
                         <div className="flex items-center gap-2">
                           <span className="text-xl text-indigo-500">{m.icon || <Utensils size={20} />}</span>
                           <div>
-                            <p className="text-sm font-semibold text-gray-800 dark:text-white">{m.name}</p>
+                            <p className="text-sm font-semibold text-gray-800 dark:text-white">{m.name} {m.quantity ? <span className="text-xs text-gray-500 font-normal">x{m.quantity}</span> : null}</p>
                             <p className="text-xs text-gray-400">{m.mealType}</p>
                           </div>
                         </div>

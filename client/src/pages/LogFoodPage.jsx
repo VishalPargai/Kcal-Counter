@@ -193,9 +193,9 @@ const LogFoodPage = ({ onFoodMedia }) => {
               <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                 {CATEGORIES.map(cat => (
                   <button key={cat} onClick={() => { setCategory(cat); setShowCustomForm(false); }}
-                    className={`flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${category === cat
+                    className={`flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95 ${category === cat
                       ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
-                      : 'bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'}`}>
+                      : 'bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10 hover:scale-105'}`}>
                     {cat}
                   </button>
                 ))}
@@ -218,7 +218,7 @@ const LogFoodPage = ({ onFoodMedia }) => {
                   <>
                     <div className="flex justify-between items-center px-2 py-1 mb-2">
                       <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{filtered.length} Results</p>
-                      <button onClick={() => setShowCustomForm(true)} className="text-xs font-bold text-indigo-500 hover:text-indigo-600 hover:cursor-pointer">
+                      <button onClick={() => setShowCustomForm(true)} className="text-xs font-bold text-indigo-500 hover:text-indigo-600 cursor-pointer hover:scale-105 active:scale-95 transition-all">
                         + Add Custom Food
                       </button>
                     </div>
@@ -227,10 +227,10 @@ const LogFoodPage = ({ onFoodMedia }) => {
                           setSelected(food);
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all hover:cursor-pointer ${
+                        className={`w-full flex items-center justify-between p-4 rounded-2xl text-left transition-all cursor-pointer active:scale-[0.98] ${
                           selected?.name === food.name
-                            ? 'bg-indigo-50 dark:bg-indigo-900/30 ring-2 ring-indigo-500 dark:ring-indigo-400'
-                            : 'hover:bg-gray-50 dark:hover:bg-white/5'
+                            ? 'bg-indigo-50 dark:bg-indigo-900/30 ring-2 ring-indigo-500 dark:ring-indigo-400 scale-[1.02]'
+                            : 'hover:bg-gray-50 dark:hover:bg-white/5 hover:scale-[1.02]'
                         }`}>
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 flex items-center justify-center text-2xl shadow-sm text-indigo-500">
@@ -261,7 +261,7 @@ const LogFoodPage = ({ onFoodMedia }) => {
               <div className="glass rounded-3xl p-6">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="font-bold text-gray-800 dark:text-white">Create Custom Food</h2>
-                  <button onClick={() => setShowCustomForm(false)} className="text-xs font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                  <button onClick={() => setShowCustomForm(false)} className="text-xs font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer hover:scale-105 active:scale-95 transition-all">
                     Cancel
                   </button>
                 </div>
@@ -322,9 +322,9 @@ const LogFoodPage = ({ onFoodMedia }) => {
                     <div className="grid grid-cols-2 gap-2">
                       {MEAL_TYPES.map(type => (
                         <button key={type} onClick={() => setMealType(type)}
-                          className={`py-2 rounded-xl text-xs font-bold transition-all ${mealType === type
-                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
-                            : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'}`}>
+                          className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95 ${mealType === type
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md scale-105'
+                            : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10 hover:scale-105'}`}>
                           {type}
                         </button>
                       ))}
@@ -334,9 +334,23 @@ const LogFoodPage = ({ onFoodMedia }) => {
                   <div>
                     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">Quantity</label>
                     <div className="flex items-center gap-3 bg-gray-50 dark:bg-white/5 rounded-2xl p-1">
-                      <button onClick={() => setQty(q => Math.max(0.25, +(q - 0.25).toFixed(2)))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Minus size={16} /></button>
-                      <span className="flex-1 text-center font-black text-gray-800 dark:text-white text-lg">{qty}</span>
-                      <button onClick={() => setQty(q => +(q + 0.25).toFixed(2))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"><Plus size={16} /></button>
+                      <button onClick={() => setQty(q => Math.max(0.5, +(Number(q) - 0.5).toFixed(2)))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all cursor-pointer active:scale-90 hover:scale-110"><Minus size={16} /></button>
+                      <input 
+                        type="number" 
+                        step="0.5" 
+                        min="0.5"
+                        value={qty} 
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setQty(val === '' ? '' : Number(val));
+                        }}
+                        onBlur={() => {
+                          if (qty === '' || isNaN(qty) || qty < 0.5) setQty(0.5);
+                        }}
+                        className="flex-1 text-center font-black text-gray-800 dark:text-white text-lg bg-transparent outline-none w-16 appearance-none" 
+                        style={{ MozAppearance: 'textfield' }}
+                      />
+                      <button onClick={() => setQty(q => +(Number(q) + 0.5).toFixed(2))} className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all cursor-pointer active:scale-90 hover:scale-110"><Plus size={16} /></button>
                     </div>
                   </div>
 
@@ -346,7 +360,7 @@ const LogFoodPage = ({ onFoodMedia }) => {
                     <button
                       type="button"
                       onClick={() => setPostToMedia(p => !p)}
-                      className="w-full flex items-center gap-3 p-3 rounded-2xl transition-all"
+                      className="w-full flex items-center gap-3 p-3 rounded-2xl transition-all cursor-pointer active:scale-[0.98]"
                     >
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${ postToMedia ? 'bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg shadow-purple-500/30' : 'bg-gray-100 dark:bg-white/10'}`}>
                         <Users size={18} className={postToMedia ? 'text-white' : 'text-gray-400'} />
@@ -372,14 +386,14 @@ const LogFoodPage = ({ onFoodMedia }) => {
                               <button
                                 type="button"
                                 onClick={() => setFoodPhoto(null)}
-                                className="absolute top-2 right-2 w-7 h-7 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-all"
+                                className="absolute top-2 right-2 w-7 h-7 bg-black/60 rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-all cursor-pointer hover:scale-110 active:scale-90"
                               ><X size={13} /></button>
                             </div>
                           ) : (
                             <button
                               type="button"
                               onClick={() => photoInputRef.current?.click()}
-                              className="w-full h-32 border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-2xl flex flex-col items-center justify-center gap-2 text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all"
+                              className="w-full h-32 border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-2xl flex flex-col items-center justify-center gap-2 text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                             >
                               <Camera size={24} />
                               <span className="text-xs font-bold">Take Photo or Upload</span>
@@ -422,7 +436,7 @@ const LogFoodPage = ({ onFoodMedia }) => {
                 <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                   {loggedToday.slice(0, 5).map(item => (
                     <div key={item._id} className="flex items-center justify-between py-1">
-                      <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1.5"><span className="text-indigo-500">{item.icon || <Utensils size={14}/>}</span> {item.name}</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1.5"><span className="text-indigo-500">{item.icon || <Utensils size={14}/>}</span> {item.name} {item.quantity ? <span className="text-xs text-gray-500 font-normal">x{item.quantity}</span> : null}</span>
                       <span className="text-xs font-black text-indigo-500">{item.calories} kcal</span>
                     </div>
                   ))}

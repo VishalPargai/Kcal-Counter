@@ -19,13 +19,13 @@ const StatCard = ({ icon, label, value, unit, gradient, sub }) => (
 );
 
 const MealRow = ({ meal, onDelete }) => (
-  <div className="flex items-center justify-between py-3 px-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all group cursor-default">
+  <div className="flex items-center justify-between py-3 px-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all group cursor-pointer active:scale-[0.98]">
     <div className="flex items-center gap-3">
       <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 flex items-center justify-center text-xl shadow-sm text-indigo-500">
         {meal.icon || <Utensils size={20} />}
       </div>
       <div>
-        <p className="font-semibold text-gray-800 dark:text-white text-sm">{meal.name}</p>
+        <p className="font-semibold text-gray-800 dark:text-white text-sm">{meal.name} {meal.quantity ? <span className="text-xs text-gray-500 font-normal">x{meal.quantity}</span> : null}</p>
         <p className="text-xs text-gray-400 dark:text-gray-500">{meal.mealType} · {new Date(meal.loggedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
       </div>
     </div>
