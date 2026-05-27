@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   resetOtp: { type: String, default: null },
   resetOtpExpire: { type: Date, default: null },
+  // Gamification / Streaks
+  streak: { type: Number, default: 0 },
+  longestStreak: { type: Number, default: 0 },
+  lastLogDate: { type: String, default: null }, // stored as 'YYYY-MM-DD'
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

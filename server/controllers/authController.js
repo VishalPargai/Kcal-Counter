@@ -22,6 +22,9 @@ const safeUser = (user) => ({
   dailyGoal: user.dailyGoal,
   activityLevel: user.activityLevel,
   role: user.role,
+  streak: user.streak || 0,
+  longestStreak: user.longestStreak || 0,
+  lastLogDate: user.lastLogDate || null,
 });
 
 export const register = async (req, res) => {

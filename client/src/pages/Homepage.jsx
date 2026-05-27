@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
-import { Flame, Target, Sparkles, Utensils, Plus, X, Dumbbell, Wheat, Droplet, Lightbulb, BarChart3, Settings, LogOut, UtensilsCrossed } from 'lucide-react';
+import { Flame, Target, Sparkles, Utensils, Plus, X, Dumbbell, Wheat, Droplet, Lightbulb, BarChart3, Settings, LogOut, UtensilsCrossed, Trophy, Zap } from 'lucide-react';
 
 const StatCard = ({ icon, label, value, unit, gradient, sub }) => (
   <div className={`relative overflow-hidden rounded-3xl p-6 ${gradient} shadow-xl group hover:scale-[1.02] transition-transform duration-300`}>
@@ -140,8 +140,42 @@ const Homepage = ({ onFoodMedia }) => {
           <StatCard icon={<Flame />} label="Calories Eaten" value={totalCalories} unit="kcal" gradient="bg-gradient-to-br from-orange-500 to-red-600" sub={`${((totalCalories / goal) * 100).toFixed(0)}% of goal`} />
           <StatCard icon={<Target />} label="Daily Goal" value={goal} unit="kcal" gradient="bg-gradient-to-br from-indigo-600 to-purple-700" sub={`Set in profile`} />
           <StatCard icon={<Sparkles />} label="Remaining" value={remaining} unit="kcal" gradient={overGoal ? 'bg-gradient-to-br from-red-500 to-rose-700' : 'bg-gradient-to-br from-emerald-500 to-teal-700'} sub={overGoal ? '⚠️ Over your goal!' : 'Keep it up!'} />
-          <StatCard icon={<Utensils />} label="Meals Logged" value={meals.length} unit="" gradient="bg-gradient-to-br from-violet-600 to-fuchsia-700" sub={`Today's entries`} />
+          <StatCard icon={<Flame />} label="Day Streak" value={user?.streak || 0} unit="days" gradient="bg-gradient-to-br from-amber-500 to-orange-600" sub={user?.streak >= 7 ? '🏆 On fire!' : user?.streak > 0 ? `Best: ${user?.longestStreak || 0}d` : 'Log today!'} />
         </div>
+
+        {/* Streak Banner */}
+        {(user?.streak || 0) > 0 && (
+          <div className={`relative overflow-hidden rounded-3xl p-5 mb-6 ${
+            (user?.streak || 0) >= 7
+              ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-500'
+              : 'bg-gradient-to-r from-orange-400 to-amber-500'
+          } shadow-xl`}>
+            {/* Animated shimmer */}
+            <div className="absolute inset-0 shimmer opacity-40" />
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className={`text-5xl ${ (user?.streak || 0) >= 7 ? 'animate-bounce' : ''}`}>
+                  {(user?.streak || 0) >= 30 ? '🏆' : (user?.streak || 0) >= 14 ? '💎' : (user?.streak || 0) >= 7 ? '🔥' : '⚡'}
+                </div>
+                <div>
+                  <p className="text-white/80 text-xs font-bold uppercase tracking-widest mb-0.5">Current Streak</p>
+                  <p className="text-white font-black text-2xl">{user?.streak} {user?.streak === 1 ? 'day' : 'days'}</p>
+                  <p className="text-white/70 text-xs mt-0.5">
+                    {(user?.streak || 0) >= 30 ? '🏆 Legendary! You are unstoppable!' :
+                     (user?.streak || 0) >= 14 ? '💎 Two weeks strong! Incredible discipline!' :
+                     (user?.streak || 0) >= 7 ? '🔥 One whole week! You are on fire!' :
+                     (user?.streak || 0) >= 3 ? '⚡ Great momentum! Keep going!' :
+                     'Good start! Log again tomorrow to grow your streak.'}
+                  </p>
+                </div>
+              </div>
+              <div className="text-right hidden sm:block">
+                <p className="text-white/60 text-xs font-semibold uppercase tracking-wider">Longest Streak</p>
+                <p className="text-white font-black text-2xl">{user?.longestStreak || 0}d</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Grid */}
         <div className="grid lg:grid-cols-3 gap-6">

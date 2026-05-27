@@ -17,6 +17,9 @@ const safeUser = (user) => ({
   activityLevel: user.activityLevel,
   createdAt: user.createdAt,
   role: user.role,
+  streak: user.streak || 0,
+  longestStreak: user.longestStreak || 0,
+  lastLogDate: user.lastLogDate || null,
 });
 
 // GET /api/user/profile

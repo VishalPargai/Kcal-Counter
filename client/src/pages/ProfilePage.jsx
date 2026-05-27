@@ -199,6 +199,40 @@ const ProfilePage = ({ onFoodMedia }) => {
                 </div>
               </div>
             )}
+
+            {/* Streak & Achievements */}
+            <div className="rounded-3xl p-5 bg-gradient-to-br from-amber-500 to-orange-600 shadow-xl text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-28 h-28 rounded-full bg-white/10 -translate-y-6 translate-x-6" />
+              <p className="text-xs font-bold text-white/70 uppercase tracking-widest mb-2 relative z-10">🔥 Streak</p>
+              <div className="flex items-end gap-4 mb-4 relative z-10">
+                <div>
+                  <p className="text-5xl font-black">{user?.streak || 0}</p>
+                  <p className="text-white/70 text-xs">day{(user?.streak || 0) !== 1 ? 's' : ''} in a row</p>
+                </div>
+                <div className="pb-1">
+                  <p className="text-white/60 text-[10px] uppercase tracking-wider">Best</p>
+                  <p className="text-2xl font-black text-white/80">{user?.longestStreak || 0}d</p>
+                </div>
+              </div>
+              {/* Achievement badges */}
+              <div className="flex flex-wrap gap-2 relative z-10">
+                {(user?.longestStreak || 0) >= 1 && (
+                  <span className="text-[10px] font-bold bg-white/20 rounded-lg px-2 py-1">⚡ Consistent Logger</span>
+                )}
+                {(user?.longestStreak || 0) >= 7 && (
+                  <span className="text-[10px] font-bold bg-white/20 rounded-lg px-2 py-1">🔥 Week Warrior</span>
+                )}
+                {(user?.longestStreak || 0) >= 14 && (
+                  <span className="text-[10px] font-bold bg-white/20 rounded-lg px-2 py-1">💎 Fortnight Champ</span>
+                )}
+                {(user?.longestStreak || 0) >= 30 && (
+                  <span className="text-[10px] font-bold bg-white/20 rounded-lg px-2 py-1">🏆 Monthly Legend</span>
+                )}
+                {(user?.longestStreak || 0) === 0 && (
+                  <span className="text-[10px] font-medium text-white/60">Log food daily to earn badges!</span>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Right - Edit form */}

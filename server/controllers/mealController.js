@@ -1,4 +1,5 @@
 import MealEntry from '../models/MealEntry.js';
+import User from '../models/User.js';
 
 // GET /api/meals?date=YYYY-MM-DD  (defaults to today)
 export const getMeals = async (req, res) => {
@@ -34,6 +35,30 @@ export const addMeal = async (req, res) => {
       name, icon, mealType, calories, protein, carbs, fat, quantity,
       loggedAt: new Date(),
     });
+
+    // ── Streak Logic ──────────────────────────────────────────────
+    const todayStr = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
+    const user = await User.findById(req.user.id);
+    if (user && user.lastLogDate !== todayStr) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+      let newStreak;
+      if (user.lastLogDate === yesterdayStr) {
+        // Consecutive day → extend streak
+        newStreak = (user.streak || 0) + 1;
+      } else {
+        // Gap in logging → reset to 1
+        newStreak = 1;
+      }
+
+      user.streak = newStreak;
+      user.longestStreak = Math.max(user.longestStreak || 0, newStreak);
+      user.lastLogDate = todayStr;
+      await user.save();
+    }
+    // ─────────────────────────────────────────────────────────────
 
     res.status(201).json(meal);
   } catch (err) {
